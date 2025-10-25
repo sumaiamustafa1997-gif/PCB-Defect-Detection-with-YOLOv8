@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PCB Defect Detection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function(){
+        const output = document.getElementById('uploaded-preview');
+        output.src = reader.result;
+        output.style.display = 'block';
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function showSpinner() {
+      document.getElementById('spinner').style.display = 'block';
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>🔧 PCB Defect Detection</h1>
+  </header>
+
+  <div class="container">
+    <div class="main">
+      <form method="POST" enctype="multipart/form-data" onsubmit="showSpinner()">
+        <input type="file" id="imageInput" name="image" accept="image/*" capture="environment" onchange="previewImage(event)" required style="display:none;">
+        <button type="button" class="upload-btn" onclick="document.getElementById('imageInput').click();">
+          📷 Choose PCB Image
+        </button>
+        <button type="submit">Detect Defects</button>
+      </form>
+
+      <div id="spinner" style="display:none; text-align:center; margin:20px;">
+        <img src="{{ url_for('static', filename='defects/spinner.gif') }}" alt="Loading..." style="width:50px;">
+        <p>Detecting defects...</p>
+      </div>
+
+      {% if detection_message %}
+        <p class="message info">{{ detection_message }}</p>
+      {% endif %}
+
+      {% if error %}
+        <p class="message error">{{ error }}</p>
+      {% endif %}
+
+      <div class="preview-section">
+        <img id="uploaded-preview" style="display:none;" alt="Uploaded PCB Image">
+
+        {% if result_image %}
+          <img src="{{ url_for('static', filename='results/' + result_image) }}" alt="Detected PCB Image">
+          <a href="{{ url_for('static', filename='results/' + result_image) }}" download>
+            <button type="button">Download Result</button>
+          </a>
+        {% endif %}
+      </div>
+
+      {% if detections %}
+        <h3>Detected Defects</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for label, conf in detections %}
+              <tr>
+                <td>{{ label }}</td>
+                <td>{{ '%.2f'|format(conf) }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+
+    <div class="sidebar">
+      <p><em>Upload or capture a PCB image to detect manufacturing defects using YOLOv8</em></p>
+
+      <h2>Model Explanation</h2>
+      <p>
+        A high-performance YOLOv8-based pipeline for detecting and classifying PCB defects.<br>
+        Optimized for usability and scalability, supports real-time inference, robust evaluation, and seamless integration into web or mobile platforms.
+      </p>
+
+      <h2>Types of PCB defects the model can detect:</h2>
+      <img src="{{ url_for('static', filename='defects/applsci-15-10895-g001.jpeg') }}" alt="PCB Defect Types" class="defect-summary">
+    </div>
+  </div>
+
+  <footer>
+    Created by Sumaia Mustafa
+  </footer>
+</body>
+</html>
