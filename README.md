@@ -25,7 +25,7 @@ Detect six types of PCB defects using a trained YOLOv8 model and serve predictio
 - Fast inference (13–45ms per image)
 - Centralized saving of outputs
 
-## Requirements
-Install dependencies with:
+## How to Use
+1. Install dependencies with:
 ```bash
 pip install -r requirements.txt
