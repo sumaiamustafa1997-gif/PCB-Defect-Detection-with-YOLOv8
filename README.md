@@ -69,6 +69,7 @@ Detect six types of PCB defects using a trained YOLOv8 model and serve predictio
    - utils.py: Helper functions for preprocessing and display
 
 ## Project Structure  
+```bash
 PCB Defect Detection/
 ├── model/              # YOLOv8 model (best.pt)
 ├── models_1/           # Training weights (best.pt, last.pt)
@@ -85,6 +86,3 @@ PCB Defect Detection/
 ├── main.ipynb          # Training and inference notebook
 ├── requirements.txt    # Python dependencies
 └── utils.py            # Helper functions
-
-
----
